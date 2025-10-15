@@ -6,6 +6,10 @@
     <title>AlignUp</title>
 </head>
 <body>
-    Welcome to AlignUp Dashboard!
+    @if ($user)
+        {{ $user->name }} Welcome to AlignUp Dashboard!
+    @else
+        Welcome to AlignUp Dashboard!
+    @endif
 </body>
 </html>
