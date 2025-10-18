@@ -6,13 +6,13 @@
     <title>AlignUp</title>
 </head>
     <body>
-        @if (session()->has('user'))
-            Welcome {{ session('user')->name }}  to AlignUp Dashboard!
-            <a href="/logout"><button>log out</button></a>
+        @if (Auth::check())
+            Welcome {{ Auth::user()->name }}  to AlignUp Dashboard!
+            <a href="/auth/logout"><button>log out</button></a>
         @else
             Welcome to AlignUp Dashboard!
-            <a href="/login"><button>log in</button></a>
-            <a href="/signup"><button>sign up</button></a>
+            <a href="/auth/login"><button>log in</button></a>
+            <a href="/auth/signup"><button>sign up</button></a>
         @endif
     </body>
 </html>

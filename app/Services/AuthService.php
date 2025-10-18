@@ -20,6 +20,7 @@ class AuthService
 
     public function login(array $credentials)
     {
+        
         return Auth::attempt([
             'email' => $credentials['email'],
             'password' => $credentials['password'],

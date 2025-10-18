@@ -17,13 +17,13 @@ class AuthController extends Controller
     // Show login form
     public function showLogin()
     {
-        return view('auth.login');
+        return view('login');
     }
 
     // Show signup form
     public function showSignup()
     {
-        return view('auth.register');
+        return view('signup');
     }
 
     // Handle registration
@@ -37,16 +37,21 @@ class AuthController extends Controller
         ]);
 
         $this->authService->register($validated);
-        return redirect('/login')->with('success', 'Account created successfully!');
+        return redirect('/auth/login')->with('success', 'Account created successfully!');
+
+        // var_dump($validated);
     }
 
     // Handle login
     public function login(Request $request)
     {
+
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
+
+        // var_dump($credentials);
 
         if ($this->authService->login($credentials)) {
             $request->session()->regenerate();
@@ -63,6 +68,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('/auth/login');
     }
 }
