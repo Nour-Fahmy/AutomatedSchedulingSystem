@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use function Laravel\Prompts\password;
+use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public function login(Request $request)
@@ -12,7 +13,8 @@ class UserController extends Controller
         $user=User::where('email', $request->email)->first();
         if($user!=null){
             if($user->password==$request->password){
-                return redirect("/")->with('user', $user);
+                session(['user' => $user]);
+                return redirect("/");
             }else{
                 return redirect("login");
             }
@@ -34,10 +36,15 @@ class UserController extends Controller
             $user->type=$request->type;
             $user->password=$request->password;
             $user->save();
-
-            return redirect("/")->with('user', $user);
+            session(['user' => $user]);
+            return redirect("/");
         }
         
         
     }
+
+    // public function logout(){
+    //     session()->flush();
+    //     return redirect("/");
+    // }
 }

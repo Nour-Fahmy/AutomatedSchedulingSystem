@@ -6,8 +6,7 @@ use App\Http\Controllers\UserController;
 
 
 Route::get('/', function () {
-    $user = Auth::user();
-    return view('dashboard', compact('user'));
+    return view('dashboard');
 })->name("dashboard");
 
 Route::get("/login",function(){
@@ -21,6 +20,12 @@ Route::get("/signup",function(){
     return view("signup");
 });
 Route::post("/signup",[UserController::class, 'signup'])->name("user.signup");
+
+// Route::get("/logout",[UserController::class , "logout"]);
+Route::get("/logout",function(){
+    session()->flush();
+    return redirect("/");
+});
 
 
 Route::fallback(function(){
