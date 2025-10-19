@@ -18,7 +18,7 @@
 
             <div class="mb-6">
                 <label for="Password" class="block text-sm text-gray-600 mb-2">Password:</label>
-                <input type="text" id="Password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                <input type="password" id="Password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
             </div>
             <button type="submit" class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200">Log in</button>
         </form>
