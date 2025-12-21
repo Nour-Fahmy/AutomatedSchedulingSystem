@@ -10,11 +10,13 @@ class AuthService
 {
     public function register(array $data)
     {
+        // Signup always creates users as 'student' type
+        // Other user types (admin/faculty) should be created through seeders or admin panel
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'type' => $data['type'] ?? 'student',
+            'type' => 'student', // Always 'student' for signup
         ]);
     }
 

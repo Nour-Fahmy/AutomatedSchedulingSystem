@@ -14,3 +14,6 @@ echo "\n";
 echo "SQLite support: " . (in_array('sqlite', $drivers) ? "✓ Available" : "✗ NOT AVAILABLE") . "\n";
 echo "MySQL support: " . (in_array('mysql', $drivers) ? "✓ Available" : "✗ NOT AVAILABLE") . "\n";
 
+
+
+

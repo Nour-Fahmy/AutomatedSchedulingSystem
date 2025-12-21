@@ -22,3 +22,6 @@ echo "Default mailer: " . config('mail.default') . "\n";
 echo "From address: " . config('mail.from.address') . "\n";
 echo "From name: " . config('mail.from.name') . "\n";
 
+
+
+

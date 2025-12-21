@@ -45,22 +45,11 @@
             </div>
 
             {{-- Password Confirmation --}}
-            <div class="mb-4">
+            <div class="mb-6">
                 <label for="password_confirmation" class="block text-sm text-gray-600 mb-2">Confirm Password</label>
                 <input type="password" id="password_confirmation" name="password_confirmation"
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
                 @error('password_confirmation')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Type --}}
-            <div class="mb-6">
-                <label for="type" class="block text-sm text-gray-600 mb-2">Type (student / faculty / admin)</label>
-                <input type="text" id="type" name="type"
-                       value="{{ old('type') }}"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
-                @error('type')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

@@ -35,10 +35,10 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => ['required','string','min:6','regex:/[A-Z]/','regex:/[a-z]/','regex:/[0-9]/','regex:/[@$!%*?&#]/','confirmed'],
-
-
-            'type' => 'required|in:student,faculty,admin',
         ]);
+
+        // Set default type to 'student' if not provided
+        $validated['type'] = 'student';
 
         $this->authService->register($validated);
         return redirect('/auth/login')->with('success', 'Account created successfully!');
