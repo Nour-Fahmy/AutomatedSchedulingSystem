@@ -21,6 +21,9 @@
                 <input type="password" id="Password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
             </div>
             <button type="submit" class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200">Log in</button>
+            <div class="text-center mt-4">
+                <a href="{{ route('password.email') }}" class="text-indigo-500 hover:text-indigo-700">Forgot Password?</a>
+            </div>
         </form>
     </div>
 </body>

@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\AuthService;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -71,5 +76,79 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/auth/login');
+    }
+
+    // Show forgot password form
+    public function showForgotPassword()
+    {
+        return view('forgot-password');
+    }
+
+    // Send reset link email if the user exists
+    public function sendResetLink(Request $request)
+    {
+        // Validate email format first
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $email = $request->email;
+
+        // Check if email exists in database
+        try {
+            $user = User::where('email', $email)->first();
+            
+            if (!$user) {
+                return back()->withErrors(['email' => 'We could not find a user with that email address.']);
+            }
+        } catch (\Exception $e) {
+            // Database connection error - show helpful message
+            return back()->withErrors(['email' => 'Database connection error. Please check your database configuration.']);
+        }
+
+        // Send reset link
+        try {
+            $status = Password::sendResetLink(['email' => $email]);
+
+            return $status === Password::RESET_LINK_SENT
+                ? back()->with(['status' => 'Password reset link has been sent to your email address.'])
+                : back()->withErrors(['email' => __($status)]);
+        } catch (\Exception $e) {
+            // Mail sending error
+            return back()->withErrors(['email' => 'Failed to send reset link. Please check your mail configuration.']);
+        }
+    }
+
+    // Show reset password form
+    public function showResetForm(Request $request, string $token)
+    {
+        return view('reset-password', [
+            'request' => $request,
+            'token' => $token,
+        ]);
+    }
+
+    // Handle password reset
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email|exists:users,email',
+            'password' => ['required','string','min:6','confirmed'],
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($request->password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('user.login')->with('success', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
     }
 }
