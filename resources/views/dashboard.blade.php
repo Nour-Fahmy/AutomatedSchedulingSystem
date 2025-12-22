@@ -67,6 +67,33 @@
             </a>
         </div>
     @else
+        {{-- Student Navigation Bar --}}
+        <nav class="bg-white shadow-md rounded-lg mb-6 px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-6">
+                    <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-200 {{ request()->routeIs('dashboard') ? 'text-indigo-600 border-b-2 border-indigo-600' : '' }}">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="{{ route('appointments.index') }}" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-200 {{ request()->routeIs('appointments.*') ? 'text-indigo-600 border-b-2 border-indigo-600' : '' }}">
+                        <i class="fas fa-calendar mr-2"></i>Appointments
+                    </a>
+                    <a href="{{ route('forum.index') }}" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-200 {{ request()->routeIs('forum.*') ? 'text-indigo-600 border-b-2 border-indigo-600' : '' }}">
+                        <i class="fas fa-comments mr-2"></i>Forum
+                    </a>
+                    <a href="{{ route('settings.index') }}" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-200 {{ request()->routeIs('settings.*') ? 'text-indigo-600 border-b-2 border-indigo-600' : '' }}">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600 text-sm">Welcome, <span class="font-semibold">{{ $user->name }}</span></span>
+                    <a href="{{ route('user.logout') }}" 
+                       class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 font-medium">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </nav>
+
         <div class="flex items-center justify-between mb-6">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
@@ -389,43 +416,43 @@
     @else
         {{-- Quick Action Cards --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <a href="{{ route('appointments.create') }}" class="p-6 rounded-lg border-2 border-brand-maroon bg-white hover:bg-brand-maroon hover:text-white transition-all duration-200 transform hover:scale-105 shadow-md">
+            <a href="{{ route('appointments.create') }}" class="student-action-card p-6 rounded-lg border-2 border-brand-maroon bg-white transition-all duration-200 transform hover:scale-105 shadow-md">
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="text-sm font-semibold text-gray-600 hover:text-white">Book Appointment</div>
+                        <div class="text-sm font-semibold text-gray-600">Book Appointment</div>
                         <div class="text-xs text-gray-500 mt-1">Schedule a new appointment</div>
                     </div>
-                    <i class="fas fa-calendar-plus text-2xl text-brand-maroon hover:text-white"></i>
+                    <i class="fas fa-calendar-plus text-2xl text-brand-maroon"></i>
                 </div>
             </a>
 
-            <a href="{{ route('appointments.index') }}" class="p-6 rounded-lg border-2 border-brand-maroon bg-white hover:bg-brand-maroon hover:text-white transition-all duration-200 transform hover:scale-105 shadow-md">
+            <a href="{{ route('appointments.index') }}" class="student-action-card p-6 rounded-lg border-2 border-brand-maroon bg-white transition-all duration-200 transform hover:scale-105 shadow-md">
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="text-sm font-semibold text-gray-600 hover:text-white">View Schedule</div>
+                        <div class="text-sm font-semibold text-gray-600">View Schedule</div>
                         <div class="text-xs text-gray-500 mt-1">See all your appointments</div>
                     </div>
-                    <i class="fas fa-calendar-check text-2xl text-brand-maroon hover:text-white"></i>
+                    <i class="fas fa-calendar-check text-2xl text-brand-maroon"></i>
                 </div>
             </a>
 
-            <a href="{{ route('forum.index') }}" class="p-6 rounded-lg border-2 border-brand-maroon bg-white hover:bg-brand-maroon hover:text-white transition-all duration-200 transform hover:scale-105 shadow-md">
+            <a href="{{ route('forum.index') }}" class="student-action-card p-6 rounded-lg border-2 border-brand-maroon bg-white transition-all duration-200 transform hover:scale-105 shadow-md">
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="text-sm font-semibold text-gray-600 hover:text-white">Forum</div>
+                        <div class="text-sm font-semibold text-gray-600">Forum</div>
                         <div class="text-xs text-gray-500 mt-1">Join discussions</div>
                     </div>
-                    <i class="fas fa-comments text-2xl text-brand-maroon hover:text-white"></i>
+                    <i class="fas fa-comments text-2xl text-brand-maroon"></i>
                 </div>
             </a>
 
-            <a href="{{ route('settings.index') }}" class="p-6 rounded-lg border-2 border-brand-maroon bg-white hover:bg-brand-maroon hover:text-white transition-all duration-200 transform hover:scale-105 shadow-md">
+            <a href="{{ route('settings.index') }}" class="student-action-card p-6 rounded-lg border-2 border-brand-maroon bg-white transition-all duration-200 transform hover:scale-105 shadow-md">
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="text-sm font-semibold text-gray-600 hover:text-white">Settings</div>
+                        <div class="text-sm font-semibold text-gray-600">Settings</div>
                         <div class="text-xs text-gray-500 mt-1">Manage preferences</div>
                     </div>
-                    <i class="fas fa-cog text-2xl text-brand-maroon hover:text-white"></i>
+                    <i class="fas fa-cog text-2xl text-brand-maroon"></i>
                 </div>
             </a>
         </div>

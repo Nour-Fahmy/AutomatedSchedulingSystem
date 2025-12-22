@@ -83,7 +83,7 @@ class AuthControllerTest extends TestCase
 
         $response = $this->get('/auth/logout');
 
-        $response->assertRedirect('/auth/login');
+        $response->assertRedirect('/');
         $this->assertGuest();
     }
 
