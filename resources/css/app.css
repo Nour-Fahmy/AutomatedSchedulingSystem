@@ -1,11 +1,347 @@
-@import 'tailwindcss';
+/* Tailwind CSS is handled by @tailwindcss/vite plugin - no import needed */
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/* =========================
+   BRAND COLOR UTILITIES (for dashboard compatibility)
+   ========================= */
+.text-brand-red { color: #4f46e5 !important; }
+.border-brand-red { border-color: #4f46e5 !important; }
+.bg-brand-red { background-color: #4f46e5 !important; }
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+.text-brand-gold { color: #818cf8 !important; }
+.border-brand-gold { border-color: #818cf8 !important; }
+.bg-brand-gold { background-color: #818cf8 !important; }
+
+/* =========================
+   ADMIN DASHBOARD DYNAMIC STYLING
+   ========================= */
+
+/* Admin Dashboard Container - Enhanced Visual Distinction */
+body.admin-dashboard {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+
+/* Admin Navigation Bar Styling */
+nav.admin-nav {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+}
+
+nav.admin-nav .text-brand-maroon {
+    color: #e0e7ff !important;
+    font-weight: 700;
+}
+
+/* Admin Badge in Navigation */
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+    color: #4f46e5;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+    margin-left: 0.5rem;
+}
+
+/* Admin Dashboard Header - Enhanced */
+.admin-dashboard-header {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.25);
+}
+
+.admin-dashboard-header h1 {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.admin-dashboard-header p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+}
+
+.admin-dashboard-header .admin-role-badge {
+    display: inline-block;
+    background: #818cf8;
+    color: #4f46e5;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.5rem;
+}
+
+/* Admin Tabs - Enhanced Styling */
+.admin-tabs-container {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+    margin-bottom: 2rem;
+}
+
+.admin-tabs-container nav button {
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.admin-tabs-container nav button:hover {
+    color: #4f46e5;
+    transform: translateY(-2px);
+}
+
+.admin-tabs-container nav button.border-b-2 {
+    border-bottom-width: 3px !important;
+    border-color: #4f46e5 !important;
+}
+
+/* Admin Cards - Premium Styling */
+.admin-card {
+    background: white;
+    border: 2px solid rgba(79, 70, 229, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4f46e5 0%, #818cf8 100%);
+}
+
+.admin-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(79, 70, 229, 0.15);
+    border-color: rgba(79, 70, 229, 0.3);
+}
+
+.admin-card .text-2xl {
+    color: #4f46e5;
+    font-weight: 800;
+}
+
+/* Admin Stats Cards - Special Highlight */
+.admin-stats-grid .admin-card:nth-child(1) {
+    border-left: 4px solid #4f46e5;
+}
+
+.admin-stats-grid .admin-card:nth-child(2) {
+    border-left: 4px solid #6366f1;
+}
+
+.admin-stats-grid .admin-card:nth-child(3) {
+    border-left: 4px solid #818cf8;
+}
+
+.admin-stats-grid .admin-card:nth-child(4) {
+    border-left: 4px solid #a5b4fc;
+}
+
+/* Admin Buttons - Enhanced */
+.admin-btn-primary {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+}
+
+.admin-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+    filter: brightness(1.05);
+}
+
+.admin-btn-secondary {
+    background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+    color: #4f46e5;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.admin-btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    filter: brightness(1.05);
+}
+
+/* Admin Tables - Enhanced */
+.admin-table-container {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+    border: 2px solid rgba(79, 70, 229, 0.1);
+}
+
+.admin-table-container table thead {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+}
+
+.admin-table-container table thead th {
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+}
+
+.admin-table-container table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.admin-table-container table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: scale(1.01);
+}
+
+/* Admin Forms - Enhanced */
+.admin-form-container {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+    border: 2px solid rgba(79, 70, 229, 0.1);
+}
+
+.admin-form-container input:focus,
+.admin-form-container select:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+    outline: none;
+}
+
+/* Admin Range Selector Buttons - Enhanced */
+.admin-range-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.admin-range-btn.active {
+    background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+    color: #4f46e5;
+    border-color: #818cf8;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.admin-range-btn:not(.active) {
+    background: white;
+    color: #6b7280;
+    border-color: #e5e7eb;
+}
+
+.admin-range-btn:not(.active):hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+    transform: translateY(-2px);
+}
+
+/* Admin Alerts - Enhanced */
+.admin-alert-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border: 2px solid #10b981;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+    color: #065f46;
+}
+
+.admin-alert-error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 2px solid #ef4444;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+}
+
+/* Admin Section Dividers */
+.admin-section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #4f46e5 50%, transparent 100%);
+    margin: 2rem 0;
+}
+
+/* Admin Dashboard Animation */
+@keyframes adminPulse {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+    }
+    50% {
+        box-shadow: 0 4px 30px rgba(79, 70, 229, 0.2);
+    }
+}
+
+.admin-card.animated {
+    animation: adminPulse 3s ease-in-out infinite;
+}
+
+/* Responsive Admin Dashboard */
+@media (max-width: 768px) {
+    .admin-dashboard-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .admin-tabs-container nav button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .admin-card {
+        padding: 1rem;
+    }
+}
+
+/* Admin Dashboard Loading State */
+.admin-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+    animation: adminShimmer 2s infinite;
+}
+
+@keyframes adminShimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
 }

@@ -4,30 +4,25 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ForumController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 // Home page route
 Route::get('/', function () {
     return view('home');
 });
 
+// Everything inside here requires login
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        $user = Auth::user();
-        
-        // Get real counts
-        $upcomingAppointments = \App\Models\Appointment::where('student_id', $user->id)
-            ->where('status', 'confirmed')
-            ->where('start_at', '>', now())
-            ->count();
-        
-        $activeServices = \App\Models\Service::where('is_active', true)->count();
-        
-        $activeThreads = \App\Models\ForumThread::where('is_locked', false)
-            ->where('created_at', '>', now()->subDays(7))
-            ->count();
-        
-        return view('dashboard', compact('upcomingAppointments', 'activeServices', 'activeThreads'));
-    })->name('dashboard');
+
+    // ✅ Dashboard: dynamic by role (admin/faculty/student)
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // ✅ Admin-only actions handled inside controller (no middleware needed)
+    // DashboardController already blocks non-admin with abort(403)
+    Route::post('/admin/settings/update', [DashboardController::class, 'updateSetting'])->name('admin.settings.update');
+    Route::delete('/admin/settings/delete/{id}', [DashboardController::class, 'deleteSetting'])->name('admin.settings.delete');
+    Route::post('/admin/services/toggle', [DashboardController::class, 'toggleService'])->name('admin.services.toggle');
 
     // Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
@@ -47,8 +42,29 @@ Route::middleware('auth')->group(function () {
     Route::post('/forum/{id}/reply', [ForumController::class, 'reply'])->name('forum.reply');
 });
 
+// Auth routes file
 Route::prefix('auth')->group(base_path('routes/auth.php'));
 
-Route::fallback(function(){
+// Admin user management routes (require authentication)
+Route::middleware('auth')->group(function () {
+    // Create user (POST from dashboard form)
+    Route::post('/admin/users/create', [UserController::class, 'store'])->name('admin.users.create');
+    
+    // Change user type (POST from dashboard form)
+    Route::post('/admin/users/changeType/{id}', [UserController::class, 'adminChangeType'])->name('admin.users.changeType');
+    
+    // Delete user (POST from dashboard form)
+    Route::post('/admin/users/delete/{id}', [UserController::class, 'adminDelete'])->name('admin.users.delete');
+    
+    // Additional routes for future use
+    Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create.get');
+    Route::get('/admin/users/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
+    Route::post('/admin/users/edit/{id}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::get('/admin/users/delete/{id}', [UserController::class, 'delete'])->name('admin.users.delete.get');
+    Route::get('/admin/users/show/{id}', [UserController::class, 'show'])->name('admin.users.show');
+});
+
+
+Route::fallback(function () {
     return "Nothing here";
 });

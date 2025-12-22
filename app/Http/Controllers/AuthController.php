@@ -17,9 +17,23 @@ class AuthController extends Controller
     }
 
     // Show login form
-    public function showLogin()
+    public function showLogin(Request $request)
     {
-        return view('login');
+        // Ensure session is started
+        if (!$request->session()->isStarted()) {
+            $request->session()->start();
+        }
+        
+        // Always regenerate CSRF token to ensure it's fresh
+        // This prevents 419 errors after logout
+        $request->session()->regenerateToken();
+        
+        // Return view with no-cache headers to prevent browser caching
+        return response()
+            ->view('login')
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     // Show signup form
@@ -49,30 +63,38 @@ class AuthController extends Controller
     // Handle login
     public function login(Request $request)
     {
-
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // var_dump($credentials);
-
         if ($this->authService->login($credentials)) {
+            // Regenerate session ID for security after successful login
             $request->session()->regenerate();
-            return redirect('/dashboard');
+            // Regenerate CSRF token after login
+            $request->session()->regenerateToken();
+            return redirect('/dashboard')->with('success', 'Welcome back!');
         }
 
-        return back()->withErrors(['email' => 'Invalid email or password']);
+        return back()->withErrors(['email' => 'Invalid email or password'])->withInput($request->only('email'));
     }
 
     // Logout
     public function logout(Request $request)
     {
         $this->authService->logout();
+        
+        // Invalidate the session (clears all data but keeps the session alive)
         $request->session()->invalidate();
+        
+        // Regenerate session ID to prevent session fixation attacks
+        $request->session()->regenerate();
+        
+        // Regenerate CSRF token for the new session
         $request->session()->regenerateToken();
 
-        return redirect('/auth/login');
+        // Redirect to home page (non-logged in dashboard)
+        return redirect('/')->with('success', 'You have been logged out successfully.');
     }
 
     // Show forgot password form

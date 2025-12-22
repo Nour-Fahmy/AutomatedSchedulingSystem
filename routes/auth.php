@@ -6,11 +6,9 @@ use App\Http\Controllers\AuthController;
 Route::get("/signup",[AuthController::class, 'showSignup']);
 Route::post("/signup",[AuthController::class, 'register'])->name("user.signup");
 
+Route::get("/logout",[AuthController::class, 'logout'])->name("user.logout");
 
-Route::get("/logout",[AuthController::class, 'logout']);
-
-
-Route::get("/login",[AuthController::class, 'showLogin']);
+Route::get("/login",[AuthController::class, 'showLogin'])->name("login");
 Route::post("/login",[AuthController::class, 'login'])->name("user.login");
 
 Route::get("/forgot-password", [AuthController::class, 'showForgotPassword']);

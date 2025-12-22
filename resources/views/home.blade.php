@@ -8,6 +8,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50">
+    @if(session('success'))
+        <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in">
+            <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
+        </div>
+    @endif
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,14 +33,14 @@
                 <!-- Auth Buttons -->
                 <div class="flex items-center space-x-4">
                     @if (Auth::check())
-                        <a href="/dashboard" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 font-medium">
+                        <a href="{{ route('dashboard') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 font-medium">
                             <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                         </a>
-                        <a href="/auth/logout" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                        <a href="{{ route('user.logout') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition duration-200">
                             <i class="fas fa-sign-out-alt mr-1"></i>Logout
                         </a>
                     @else
-                        <a href="/auth/login" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition duration-200">
                             <i class="fas fa-sign-in-alt mr-1"></i>Login
                         </a>
                         <a href="/auth/signup" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 font-medium">
@@ -72,14 +77,14 @@
 
                     <div class="flex flex-col sm:flex-row gap-4">
                         @if (Auth::check())
-                            <a href="/dashboard" class="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-semibold text-lg text-center">
+                            <a href="{{ route('dashboard') }}" class="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-semibold text-lg text-center">
                                 <i class="fas fa-arrow-right mr-2"></i>Go to Dashboard
                             </a>
                         @else
                             <a href="/auth/signup" class="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-semibold text-lg text-center">
                                 <i class="fas fa-rocket mr-2"></i>Get Started
                             </a>
-                            <a href="/auth/login" class="border-2 border-indigo-600 text-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition duration-200 font-semibold text-lg text-center">
+                            <a href="{{ route('login') }}" class="border-2 border-indigo-600 text-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition duration-200 font-semibold text-lg text-center">
                                 <i class="fas fa-sign-in-alt mr-2"></i>Login
                             </a>
                         @endif
@@ -201,6 +206,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuButton = document.querySelector('.md\\:hidden button');
             // Add mobile menu functionality here if needed
+            
+            // Auto-hide success message after 5 seconds
+            const successMessage = document.querySelector('.bg-green-500');
+            if (successMessage) {
+                setTimeout(() => {
+                    successMessage.style.transition = 'opacity 0.5s';
+                    successMessage.style.opacity = '0';
+                    setTimeout(() => successMessage.remove(), 500);
+                }, 5000);
+            }
         });
     </script>
 </body>
