@@ -10,7 +10,9 @@ Add or update these variables in your `.env` file:
 
 ```env
 APP_URL=https://yourdomain.com
+APP_ENV=production
 SESSION_SECURE_COOKIE=true
+APP_FORCE_HTTPS=true  # Optional: Force HTTPS even in non-production environments
 ```
 
 ### 2. Enable HTTPS Redirect in .htaccess (Apache)
