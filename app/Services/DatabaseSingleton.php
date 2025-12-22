@@ -12,9 +12,9 @@ class DatabaseSingleton
     private function __construct()
     {
         $this->connection = new PDO(
-            "mysql:host=127.0.0.1;dbname=laravel",
+            "mysql:host=127.0.0.1;dbname=alignup_db",
             "root",
-            "123456789"
+            "Root"
         );
 
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
