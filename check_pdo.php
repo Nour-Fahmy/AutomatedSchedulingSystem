@@ -17,3 +17,6 @@ echo "MySQL support: " . (in_array('mysql', $drivers) ? "✓ Available" : "✗ N
 
 
 
+
+
+
