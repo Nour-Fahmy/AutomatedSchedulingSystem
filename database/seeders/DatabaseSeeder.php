@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
             ServicesTableSeeder::class,
             SettingsTableSeeder::class,
             AvailabilityRulesSeeder::class,
-            AppointmentsSeeder::class,
             ForumSeeder::class,
         ]);
     }

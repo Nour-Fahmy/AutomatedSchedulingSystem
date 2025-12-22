@@ -13,68 +13,45 @@ class UsersTableSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        // Admin
-        DB::table('users')->insert([
-            'name' => 'Admin User',
-            'email' => 'admin@alignup.local',
-            'email_verified_at' => $now,
-            'type' => 'admin',
-            'password' => Hash::make('password'), // change in production
-            'created_at' => $now,
-            'updated_at' => $now,
-        ]);
-
-        // Faculty
-        DB::table('users')->insert([
+        $users = [
             [
-                'name' => 'Dr. Sara Faculty',
-                'email' => 'sara.faculty@alignup.local',
+                'name' => 'Admin User',
+                'email' => 'admin@alignup.local',
+                'password' => Hash::make('12345678'),
+                'type' => 'admin',
                 'email_verified_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Faculty User',
+                'email' => 'faculty@alignup.local',
+                'password' => Hash::make('12345678'),
                 'type' => 'faculty',
-                'password' => Hash::make('password'),
+                'email_verified_at' => $now,
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
             [
-                'name' => 'Mr. Omar Faculty',
-                'email' => 'omar.faculty@alignup.local',
+                'name' => 'Student User',
+                'email' => 'student@alignup.local',
+                'password' => Hash::make('12345678'),
+                'type' => 'student',
                 'email_verified_at' => $now,
-                'type' => 'faculty',
-                'password' => Hash::make('password'),
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-        ]);
+        ];
 
-        // Students
-        DB::table('users')->insert([
-            [
-                'name' => 'Nour Student',
-                'email' => 'nour.student@alignup.local',
-                'email_verified_at' => $now,
-                'type' => 'student',
-                'password' => Hash::make('password'),
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Mina Student',
-                'email' => 'mina.student@alignup.local',
-                'email_verified_at' => $now,
-                'type' => 'student',
-                'password' => Hash::make('password'),
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Rana Student',
-                'email' => 'rana.student@alignup.local',
-                'email_verified_at' => $now,
-                'type' => 'student',
-                'password' => Hash::make('password'),
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-        ]);
+        /**
+         * Idempotent insert/update:
+         * - If email exists → update user
+         * - If not → insert user
+         */
+        DB::table('users')->upsert(
+            $users,
+            ['email'], // unique key
+            ['name', 'password', 'type', 'email_verified_at', 'updated_at']
+        );
     }
 }

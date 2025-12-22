@@ -12,22 +12,84 @@ class AvailabilityRulesSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        $facultySara = DB::table('users')->where('email', 'sara.faculty@alignup.local')->value('id');
-        $facultyOmar = DB::table('users')->where('email', 'omar.faculty@alignup.local')->value('id');
+        // Fetch IDs safely (no array-shaped where)
+        $facultyId = DB::table('users')
+            ->where('email', 'faculty@alignup.local')
+            ->value('id');
 
-        $advisingId = DB::table('services')->where('name', 'Academic Advising')->value('id');
-        $tutoringId = DB::table('services')->where('name', 'Tutoring')->value('id');
+        $tutoringId = DB::table('services')
+            ->where('name', 'Tutoring')
+            ->value('id');
 
-        // Dr. Sara - Advising: Mon & Wed 10:00–13:00
-        DB::table('availability_rules')->insert([
-            ['faculty_id' => $facultySara, 'service_id' => $advisingId, 'weekday' => 1, 'start_time' => '10:00:00', 'end_time' => '13:00:00', 'created_at' => $now, 'updated_at' => $now],
-            ['faculty_id' => $facultySara, 'service_id' => $advisingId, 'weekday' => 3, 'start_time' => '10:00:00', 'end_time' => '13:00:00', 'created_at' => $now, 'updated_at' => $now],
-        ]);
+        $advisingId = DB::table('services')
+            ->where('name', 'Academic Advising')
+            ->value('id');
 
-        // Mr. Omar - Tutoring: Tue & Thu 14:00–17:00
-        DB::table('availability_rules')->insert([
-            ['faculty_id' => $facultyOmar, 'service_id' => $tutoringId, 'weekday' => 2, 'start_time' => '14:00:00', 'end_time' => '17:00:00', 'created_at' => $now, 'updated_at' => $now],
-            ['faculty_id' => $facultyOmar, 'service_id' => $tutoringId, 'weekday' => 4, 'start_time' => '14:00:00', 'end_time' => '17:00:00', 'created_at' => $now, 'updated_at' => $now],
-        ]);
+        $careerId = DB::table('services')
+            ->where('name', 'Career Counseling')
+            ->value('id');
+
+        // If prerequisites are missing, stop (prevents FK issues)
+        if (!$facultyId || !$tutoringId || !$advisingId || !$careerId) {
+            return;
+        }
+
+        /**
+         * Weekday mapping (LOCKED):
+         * 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday, 7=Sunday
+         */
+        $rules = [
+            // Tutoring (Mon)
+            [
+                'faculty_id'  => $facultyId,
+                'service_id'  => $tutoringId,
+                'weekday'     => 1,
+                'start_time'  => '09:00:00',
+                'end_time'    => '12:00:00',
+                'created_at'  => $now,
+                'updated_at'  => $now,
+            ],
+            // Tutoring (Wed)
+            [
+                'faculty_id'  => $facultyId,
+                'service_id'  => $tutoringId,
+                'weekday'     => 3,
+                'start_time'  => '13:00:00',
+                'end_time'    => '16:00:00',
+                'created_at'  => $now,
+                'updated_at'  => $now,
+            ],
+            // Academic Advising (Tue)
+            [
+                'faculty_id'  => $facultyId,
+                'service_id'  => $advisingId,
+                'weekday'     => 2,
+                'start_time'  => '10:00:00',
+                'end_time'    => '13:00:00',
+                'created_at'  => $now,
+                'updated_at'  => $now,
+            ],
+            // Career Counseling (Thu)
+            [
+                'faculty_id'  => $facultyId,
+                'service_id'  => $careerId,
+                'weekday'     => 4,
+                'start_time'  => '11:00:00',
+                'end_time'    => '14:00:00',
+                'created_at'  => $now,
+                'updated_at'  => $now,
+            ],
+        ];
+
+        /**
+         * Idempotent upsert:
+         * Same rule won't be duplicated on repeated db:seed runs.
+         * Unique identity = faculty + service + weekday + start + end
+         */
+        DB::table('availability_rules')->upsert(
+            $rules,
+            ['faculty_id', 'service_id', 'weekday', 'start_time', 'end_time'],
+            ['updated_at']
+        );
     }
 }

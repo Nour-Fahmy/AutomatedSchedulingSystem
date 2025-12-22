@@ -12,10 +12,32 @@ class ServicesTableSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        DB::table('services')->insert([
-            ['name' => 'Academic Advising',  'description' => 'Program & course planning',        'is_active' => true,  'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'Tutoring',           'description' => 'One-on-one tutoring sessions',     'is_active' => true,  'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'Career Counseling',  'description' => 'CV & interview guidance',          'is_active' => false, 'created_at' => $now, 'updated_at' => $now], // inactive to demo
-        ]);
+        $services = [
+            [
+                'name' => 'Academic Advising',
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Tutoring',
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Career Counseling',
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ];
+
+        // Idempotent: no duplicates when you re-seed
+        DB::table('services')->upsert(
+            $services,
+            ['name'],                // unique key
+            ['is_active', 'updated_at'] // fields to update if exists
+        );
     }
 }

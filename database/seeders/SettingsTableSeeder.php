@@ -22,6 +22,9 @@ class SettingsTableSeeder extends Seeder
             ['key' => 'ics_enabled',               'value' => 'true'],
             ['key' => 'timezone',                  'value' => 'Africa/Cairo'],
             ['key' => 'mail_from_address',         'value' => 'no-reply@alignup.local'],
+            ['key' => 'no_show_grace_minutes',        'value' => '15'],
+            ['key' => 'appointment_duration_minutes','value' => '30'],
+
         ];
 
         foreach ($rows as $row) {
