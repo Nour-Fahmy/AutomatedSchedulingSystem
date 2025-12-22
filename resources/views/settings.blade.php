@@ -127,6 +127,44 @@
                     </button>
                 </div>
             </form>
+
+            <!-- Google Calendar Integration -->
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Google Calendar Integration</h2>
+                <p class="text-gray-600 mb-4 text-sm">
+                    Connect your Google Calendar to receive notifications and sync your appointments.
+                </p>
+
+                @if (auth()->user()->google_token)
+                    <div class="mb-4 px-4 py-3 rounded-lg bg-green-50 text-green-800 text-sm flex items-center justify-between">
+                        <span>
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Google Calendar is connected
+                        </span>
+                        <form action="{{ route('google.disconnect') }}" method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                Disconnect
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="mb-4">
+                        <a href="{{ route('google.redirect') }}" 
+                           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
+                            <i class="fab fa-google mr-2"></i>
+                            Connect Google Calendar
+                        </a>
+                    </div>
+                @endif
+
+                @if ($errors->has('google'))
+                    <div class="mt-4 px-4 py-3 rounded-lg bg-red-50 text-red-800 text-sm">
+                        {{ $errors->first('google') }}
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 </div>

@@ -6,7 +6,7 @@ use App\Models\Appointment;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use App\Services\GoogleCalendarService;
 class AppointmentService
 {
     /**
@@ -72,7 +72,7 @@ class AppointmentService
             throw new \Exception('This faculty already has an appointment in that time range. Please choose another time.');
         }
 
-        return Appointment::create([
+        $appointment = Appointment::create([
             'student_id' => $data['student_id'],
             'faculty_id' => $data['faculty_id'],
             'service_id' => $data['service_id'],
@@ -82,6 +82,17 @@ class AppointmentService
             'scheduled_by' => 'student',
             'reason' => $data['reason'] ?? null,
         ]);
+
+        // Create Google Calendar events with notifications
+        $googleCalendarService = new GoogleCalendarService();
+        $googleEventId = $googleCalendarService->createEvent($appointment);
+        
+        // Save the Google event ID if created
+        if ($googleEventId) {
+            $appointment->update(['google_event_id' => $googleEventId]);
+        }
+
+        return $appointment;
     }
 
     /**
@@ -97,6 +108,21 @@ class AppointmentService
         // Check if appointment is in the past
         if ($appointment->start_at <= now()) {
             throw new \Exception('You can only cancel upcoming appointments.');
+        }
+
+        // Delete Google Calendar event if exists
+        if ($appointment->google_event_id) {
+            $googleCalendarService = new GoogleCalendarService();
+            $appointment->load(['student', 'faculty']);
+            
+            // Delete from the calendar where it was created (student's calendar if they have token, otherwise faculty's)
+            $owner = $appointment->student->google_token 
+                ? $appointment->student 
+                : ($appointment->faculty->google_token ? $appointment->faculty : null);
+            
+            if ($owner) {
+                $googleCalendarService->deleteEvent($owner, $appointment->google_event_id);
+            }
         }
 
         $appointment->update([

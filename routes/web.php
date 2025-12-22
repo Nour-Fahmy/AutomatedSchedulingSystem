@@ -6,7 +6,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\GoogleController;
 // Home page route
 Route::get('/', function () {
     return view('home');
@@ -64,6 +64,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/users/show/{id}', [UserController::class, 'show'])->name('admin.users.show');
 });
 
+// Google Calendar routes (require authentication)
+Route::middleware('auth')->group(function () {
+    Route::get('/google/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
+    Route::get('/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
+    Route::delete('/google/disconnect', [GoogleController::class, 'disconnect'])->name('google.disconnect');
+});
 
 Route::fallback(function () {
     return "Nothing here";
