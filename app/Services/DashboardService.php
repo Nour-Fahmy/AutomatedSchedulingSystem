@@ -103,7 +103,10 @@ class DashboardService
             ->orderBy('start_time')
             ->get();
 
-        $services = Service::orderBy('name')->get();
+        $services = Service::where('is_active', true)
+            ->whereIn('name', ['Academic Advising', 'Career Counseling', 'Tutoring'])
+            ->orderBy('name')
+            ->get();
 
         return [
             'appointmentsCount' => $appointmentsCount,

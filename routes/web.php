@@ -17,6 +17,10 @@ Route::middleware('auth')->group(function () {
 
     // ✅ Dashboard: dynamic by role (admin/faculty/student)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Faculty office hours management
+    Route::post('/dashboard/faculty-office-hours', [DashboardController::class, 'storeFacultyOfficeHours'])->name('dashboard.faculty-office-hours.store');
+    Route::delete('/dashboard/faculty-office-hours/{availabilityRule}', [DashboardController::class, 'deleteFacultyOfficeHours'])->name('dashboard.faculty-office-hours.destroy');
 
     // ✅ Admin-only actions handled inside controller (no middleware needed)
     // DashboardController already blocks non-admin with abort(403)

@@ -369,45 +369,197 @@
         FACULTY VIEW
     ========================== --}}
     @elseif($user->isFaculty())
+        @if(session('error'))
+            <div class="mb-4 p-4 rounded-lg bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 text-red-800 text-sm shadow-md animate-pulse">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
+        
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="p-4 rounded-lg border bg-white"><div class="text-sm text-gray-500">Confirmed</div><div class="text-2xl font-bold">{{ $appointmentsCount['confirmed'] }}</div></div>
-            <div class="p-4 rounded-lg border bg-white"><div class="text-sm text-gray-500">Completed</div><div class="text-2xl font-bold">{{ $appointmentsCount['completed'] }}</div></div>
-            <div class="p-4 rounded-lg border bg-white"><div class="text-sm text-gray-500">Canceled</div><div class="text-2xl font-bold">{{ $appointmentsCount['canceled'] }}</div></div>
-            <div class="p-4 rounded-lg border bg-white"><div class="text-sm text-gray-500">No-Show</div><div class="text-2xl font-bold">{{ $appointmentsCount['no_show'] }}</div></div>
+            <div class="group p-5 rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white hover:from-indigo-100 hover:to-indigo-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">Confirmed</div>
+                    <i class="fas fa-check-circle text-indigo-500 text-xl group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold text-indigo-700 group-hover:text-indigo-800 transition-colors">{{ $appointmentsCount['confirmed'] }}</div>
+            </div>
+            <div class="group p-5 rounded-xl border-2 border-green-200 bg-gradient-to-br from-green-50 to-white hover:from-green-100 hover:to-green-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm font-semibold text-green-600 uppercase tracking-wide">Completed</div>
+                    <i class="fas fa-check-double text-green-500 text-xl group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold text-green-700 group-hover:text-green-800 transition-colors">{{ $appointmentsCount['completed'] }}</div>
+            </div>
+            <div class="group p-5 rounded-xl border-2 border-red-200 bg-gradient-to-br from-red-50 to-white hover:from-red-100 hover:to-red-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm font-semibold text-red-600 uppercase tracking-wide">Canceled</div>
+                    <i class="fas fa-times-circle text-red-500 text-xl group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold text-red-700 group-hover:text-red-800 transition-colors">{{ $appointmentsCount['canceled'] }}</div>
+            </div>
+            <div class="group p-5 rounded-xl border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white hover:from-orange-100 hover:to-orange-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm font-semibold text-orange-600 uppercase tracking-wide">No-Show</div>
+                    <i class="fas fa-user-slash text-orange-500 text-xl group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold text-orange-700 group-hover:text-orange-800 transition-colors">{{ $appointmentsCount['no_show'] }}</div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="p-4 rounded-lg border bg-white">
-                <h2 class="font-bold mb-3">Upcoming Appointments</h2>
-                <div class="divide-y">
+            <div class="p-6 rounded-xl border-2 border-blue-200 bg-gradient-to-br from-white to-blue-50 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="p-2 bg-blue-100 rounded-lg mr-3">
+                        <i class="fas fa-calendar-check text-blue-600"></i>
+                    </div>
+                    <h2 class="font-bold text-xl text-gray-800">Upcoming Appointments</h2>
+                </div>
+                <div class="space-y-3">
                     @forelse($upcoming as $a)
-                        <div class="py-3">
-                            <div class="font-semibold">{{ $a->service->name ?? 'Service' }}</div>
-                            <div class="text-sm text-gray-600">
-                                Student: {{ $a->student->name ?? 'N/A' }} · {{ $a->start_at }} → {{ $a->end_at }}
+                        <div class="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <div class="font-semibold text-gray-900 mb-1 flex items-center">
+                                        <i class="fas fa-briefcase text-indigo-500 mr-2 text-sm"></i>
+                                        {{ $a->service->name ?? 'Service' }}
+                                    </div>
+                                    <div class="text-sm text-gray-600 flex items-center mt-2">
+                                        <i class="fas fa-user-graduate text-gray-400 mr-2"></i>
+                                        <span class="font-medium">{{ $a->student->name ?? 'N/A' }}</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1 flex items-center">
+                                        <i class="fas fa-clock text-gray-400 mr-2"></i>
+                                        {{ $a->start_at }} → {{ $a->end_at }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     @empty
-                        <div class="text-sm text-gray-500 py-3">No upcoming appointments.</div>
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-calendar-times text-4xl mb-3 text-gray-300"></i>
+                            <p>No upcoming appointments.</p>
+                        </div>
                     @endforelse
                 </div>
             </div>
 
-            <div class="p-4 rounded-lg border bg-white">
-                <h2 class="font-bold mb-3">My Availability</h2>
-                <div class="divide-y">
+            <div class="p-6 rounded-xl border-2 border-purple-200 bg-gradient-to-br from-white to-purple-50 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="p-2 bg-purple-100 rounded-lg mr-3">
+                        <i class="fas fa-clock text-purple-600"></i>
+                    </div>
+                    <h2 class="font-bold text-xl text-gray-800">My Availability</h2>
+                </div>
+                <div class="space-y-3">
                     @forelse($rules as $r)
-                        <div class="py-3">
-                            <div class="font-semibold">{{ $r->service->name ?? 'Service' }}</div>
-                            <div class="text-sm text-gray-600">
-                                Weekday: {{ $r->weekday }} · {{ $r->start_time }} → {{ $r->end_time }}
+                        <div class="p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="font-semibold text-gray-900 mb-1 flex items-center">
+                                        <i class="fas fa-briefcase text-purple-500 mr-2 text-sm"></i>
+                                        {{ $r->service->name ?? 'Service' }}
+                                    </div>
+                                    <div class="text-sm text-gray-600 flex items-center mt-2">
+                                        @php
+                                            $weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                                        @endphp
+                                        <i class="fas fa-calendar-day text-gray-400 mr-2"></i>
+                                        <span class="font-medium">{{ $weekdays[$r->weekday] ?? 'Day ' . $r->weekday }}</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1 flex items-center">
+                                        <i class="fas fa-clock text-gray-400 mr-2"></i>
+                                        {{ date('g:i A', strtotime($r->start_time)) }} - {{ date('g:i A', strtotime($r->end_time)) }}
+                                    </div>
+                                </div>
+                                <form action="{{ route('dashboard.faculty-office-hours.destroy', $r) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Delete this office hour?')" class="p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200 transform hover:scale-110">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     @empty
-                        <div class="text-sm text-gray-500 py-3">No availability rules.</div>
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-clock text-4xl mb-3 text-gray-300"></i>
+                            <p>No availability rules.</p>
+                        </div>
                     @endforelse
                 </div>
             </div>
+        </div>
+
+        {{-- Add Office Hours Form --}}
+        <div class="p-6 rounded-xl border-2 border-teal-200 bg-gradient-to-br from-white to-teal-50 shadow-lg mt-6 hover:shadow-xl transition-all duration-300">
+            <div class="flex items-center mb-6">
+                <div class="p-2 bg-teal-100 rounded-lg mr-3">
+                    <i class="fas fa-plus-circle text-teal-600"></i>
+                </div>
+                <h2 class="font-bold text-xl text-gray-800">Add Office Hours</h2>
+            </div>
+            @if(session('error'))
+                <div class="mb-4 p-4 rounded-lg bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 text-red-800 text-sm shadow-md">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        {{ session('error') }}
+                    </div>
+                </div>
+            @endif
+            <form method="POST" action="{{ route('dashboard.faculty-office-hours.store') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                @csrf
+                <div class="transform transition-all duration-200 hover:scale-105">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-briefcase text-teal-500 mr-2"></i>
+                        Service Type
+                    </label>
+                    <select name="service_id" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-400">
+                        <option value="">Select service</option>
+                        @foreach($services as $service)
+                            <option value="{{ $service->id }}" @selected(old('service_id') == $service->id)>{{ $service->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="transform transition-all duration-200 hover:scale-105">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-calendar-day text-teal-500 mr-2"></i>
+                        Day of Week
+                    </label>
+                    <select name="weekday" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-400">
+                        <option value="">Select day</option>
+                        <option value="0" @selected(old('weekday') == 0)>Sunday</option>
+                        <option value="1" @selected(old('weekday') == 1)>Monday</option>
+                        <option value="2" @selected(old('weekday') == 2)>Tuesday</option>
+                        <option value="3" @selected(old('weekday') == 3)>Wednesday</option>
+                        <option value="4" @selected(old('weekday') == 4)>Thursday</option>
+                        <option value="5" @selected(old('weekday') == 5)>Friday</option>
+                        <option value="6" @selected(old('weekday') == 6)>Saturday</option>
+                    </select>
+                </div>
+                <div class="transform transition-all duration-200 hover:scale-105">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-clock text-teal-500 mr-2"></i>
+                        Start Time
+                    </label>
+                    <input type="time" name="start_time" value="{{ old('start_time', '09:00') }}" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-400">
+                </div>
+                <div class="transform transition-all duration-200 hover:scale-105">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-clock text-teal-500 mr-2"></i>
+                        End Time
+                    </label>
+                    <input type="time" name="end_time" value="{{ old('end_time', '17:00') }}" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-400">
+                </div>
+                <div class="md:col-span-4 pt-2">
+                    <button type="submit" class="bg-gradient-to-r from-teal-600 to-teal-700 text-white px-8 py-3 rounded-lg hover:from-teal-700 hover:to-teal-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center">
+                        <i class="fas fa-plus-circle mr-2"></i>
+                        Add Office Hours
+                    </button>
+                </div>
+            </form>
         </div>
 
     {{-- =========================
@@ -416,111 +568,145 @@
     @else
         {{-- Quick Action Cards --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <a href="{{ route('appointments.create') }}" class="student-action-card p-6 rounded-lg border-2 border-brand-maroon bg-white transition-all duration-200 transform hover:scale-105 shadow-md">
+            <a href="{{ route('appointments.create') }}" class="group p-6 rounded-xl border-2 border-indigo-300 bg-gradient-to-br from-indigo-50 to-white hover:from-indigo-100 hover:to-indigo-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer">
                 <div class="flex items-center justify-between">
-                    <div>
-                        <div class="text-sm font-semibold text-gray-600">Book Appointment</div>
-                        <div class="text-xs text-gray-500 mt-1">Schedule a new appointment</div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-indigo-700 uppercase tracking-wide mb-1">Book Appointment</div>
+                        <div class="text-xs text-gray-600">Schedule a new appointment</div>
                     </div>
-                    <i class="fas fa-calendar-plus text-2xl text-brand-maroon"></i>
+                    <div class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
+                        <i class="fas fa-calendar-plus text-white text-2xl"></i>
+                    </div>
                 </div>
             </a>
 
-            <a href="{{ route('appointments.index') }}" class="student-action-card p-6 rounded-lg border-2 border-brand-maroon bg-white transition-all duration-200 transform hover:scale-105 shadow-md">
+            <a href="{{ route('appointments.index') }}" class="group p-6 rounded-xl border-2 border-blue-300 bg-gradient-to-br from-blue-50 to-white hover:from-blue-100 hover:to-blue-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer">
                 <div class="flex items-center justify-between">
-                    <div>
-                        <div class="text-sm font-semibold text-gray-600">View Schedule</div>
-                        <div class="text-xs text-gray-500 mt-1">See all your appointments</div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-blue-700 uppercase tracking-wide mb-1">View Schedule</div>
+                        <div class="text-xs text-gray-600">See all your appointments</div>
                     </div>
-                    <i class="fas fa-calendar-check text-2xl text-brand-maroon"></i>
+                    <div class="p-3 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
+                        <i class="fas fa-calendar-check text-white text-2xl"></i>
+                    </div>
                 </div>
             </a>
 
-            <a href="{{ route('forum.index') }}" class="student-action-card p-6 rounded-lg border-2 border-brand-maroon bg-white transition-all duration-200 transform hover:scale-105 shadow-md">
+            <a href="{{ route('forum.index') }}" class="group p-6 rounded-xl border-2 border-green-300 bg-gradient-to-br from-green-50 to-white hover:from-green-100 hover:to-green-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer">
                 <div class="flex items-center justify-between">
-                    <div>
-                        <div class="text-sm font-semibold text-gray-600">Forum</div>
-                        <div class="text-xs text-gray-500 mt-1">Join discussions</div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-green-700 uppercase tracking-wide mb-1">Forum</div>
+                        <div class="text-xs text-gray-600">Join discussions</div>
                     </div>
-                    <i class="fas fa-comments text-2xl text-brand-maroon"></i>
+                    <div class="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
+                        <i class="fas fa-comments text-white text-2xl"></i>
+                    </div>
                 </div>
             </a>
 
-            <a href="{{ route('settings.index') }}" class="student-action-card p-6 rounded-lg border-2 border-brand-maroon bg-white transition-all duration-200 transform hover:scale-105 shadow-md">
+            <a href="{{ route('settings.index') }}" class="group p-6 rounded-xl border-2 border-purple-300 bg-gradient-to-br from-purple-50 to-white hover:from-purple-100 hover:to-purple-50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer">
                 <div class="flex items-center justify-between">
-                    <div>
-                        <div class="text-sm font-semibold text-gray-600">Settings</div>
-                        <div class="text-xs text-gray-500 mt-1">Manage preferences</div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-purple-700 uppercase tracking-wide mb-1">Settings</div>
+                        <div class="text-xs text-gray-600">Manage preferences</div>
                     </div>
-                    <i class="fas fa-cog text-2xl text-brand-maroon"></i>
+                    <div class="p-3 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
+                        <i class="fas fa-cog text-white text-2xl"></i>
+                    </div>
                 </div>
             </a>
         </div>
 
         {{-- Statistics Cards --}}
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="p-4 rounded-lg border bg-white shadow-sm">
-                <div class="text-sm text-gray-500">Confirmed</div>
-                <div class="text-2xl font-bold text-brand-maroon">{{ $appointmentsCount['confirmed'] }}</div>
+            <div class="group p-5 rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white hover:from-indigo-100 hover:to-indigo-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm font-semibold text-indigo-600 uppercase tracking-wide">Confirmed</div>
+                    <i class="fas fa-check-circle text-indigo-500 text-xl group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold text-indigo-700 group-hover:text-indigo-800 transition-colors">{{ $appointmentsCount['confirmed'] }}</div>
             </div>
-            <div class="p-4 rounded-lg border bg-white shadow-sm">
-                <div class="text-sm text-gray-500">Completed</div>
-                <div class="text-2xl font-bold text-green-600">{{ $appointmentsCount['completed'] }}</div>
+            <div class="group p-5 rounded-xl border-2 border-green-200 bg-gradient-to-br from-green-50 to-white hover:from-green-100 hover:to-green-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm font-semibold text-green-600 uppercase tracking-wide">Completed</div>
+                    <i class="fas fa-check-double text-green-500 text-xl group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold text-green-700 group-hover:text-green-800 transition-colors">{{ $appointmentsCount['completed'] }}</div>
             </div>
-            <div class="p-4 rounded-lg border bg-white shadow-sm">
-                <div class="text-sm text-gray-500">Canceled</div>
-                <div class="text-2xl font-bold text-red-600">{{ $appointmentsCount['canceled'] }}</div>
+            <div class="group p-5 rounded-xl border-2 border-red-200 bg-gradient-to-br from-red-50 to-white hover:from-red-100 hover:to-red-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm font-semibold text-red-600 uppercase tracking-wide">Canceled</div>
+                    <i class="fas fa-times-circle text-red-500 text-xl group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold text-red-700 group-hover:text-red-800 transition-colors">{{ $appointmentsCount['canceled'] }}</div>
             </div>
-            <div class="p-4 rounded-lg border bg-white shadow-sm">
-                <div class="text-sm text-gray-500">No-Show</div>
-                <div class="text-2xl font-bold text-orange-600">{{ $appointmentsCount['no_show'] }}</div>
+            <div class="group p-5 rounded-xl border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white hover:from-orange-100 hover:to-orange-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="text-sm font-semibold text-orange-600 uppercase tracking-wide">No-Show</div>
+                    <i class="fas fa-user-slash text-orange-500 text-xl group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="text-3xl font-bold text-orange-700 group-hover:text-orange-800 transition-colors">{{ $appointmentsCount['no_show'] }}</div>
             </div>
         </div>
 
         {{-- Upcoming Appointments Section --}}
-        <div class="p-6 rounded-lg border bg-white shadow-sm mb-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-gray-900">Upcoming Appointments</h2>
-                <a href="{{ route('appointments.index') }}" class="text-sm text-brand-maroon hover:underline font-semibold">
-                    View All <i class="fas fa-arrow-right ml-1"></i>
+        <div class="p-6 rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-white to-indigo-50 shadow-lg hover:shadow-xl transition-all duration-300 mb-6">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-indigo-100 rounded-lg mr-3">
+                        <i class="fas fa-calendar-check text-indigo-600"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Upcoming Appointments</h2>
+                </div>
+                <a href="{{ route('appointments.index') }}" class="text-sm text-indigo-600 hover:text-indigo-800 font-semibold flex items-center transition-colors transform hover:scale-105">
+                    View All <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
-            <div class="divide-y">
+            <div class="space-y-3">
                 @forelse($upcoming as $a)
-                    <div class="py-4 hover:bg-gray-50 transition-colors">
+                    <div class="p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
-                                <div class="font-semibold text-gray-900">{{ $a->service->name ?? 'Service' }}</div>
-                                <div class="text-sm text-gray-600 mt-1">
-                                    <i class="fas fa-user-tie mr-1"></i>Faculty: {{ $a->faculty->name ?? 'N/A' }}
+                                <div class="font-semibold text-gray-900 mb-2 flex items-center">
+                                    <i class="fas fa-briefcase text-indigo-500 mr-2 text-sm"></i>
+                                    {{ $a->service->name ?? 'Service' }}
                                 </div>
-                                <div class="text-sm text-gray-600 mt-1">
-                                    <i class="fas fa-clock mr-1"></i>{{ $a->start_at }} → {{ $a->end_at }}
+                                <div class="text-sm text-gray-600 flex items-center mt-2">
+                                    <i class="fas fa-user-tie text-gray-400 mr-2"></i>
+                                    <span class="font-medium">Faculty: {{ $a->faculty->name ?? 'N/A' }}</span>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1 flex items-center">
+                                    <i class="fas fa-clock text-gray-400 mr-2"></i>
+                                    {{ $a->start_at }} → {{ $a->end_at }}
                                 </div>
                                 @if($a->reason)
-                                    <div class="text-sm text-gray-500 mt-1">
-                                        <i class="fas fa-sticky-note mr-1"></i>{{ strlen($a->reason) > 100 ? substr($a->reason, 0, 100) . '...' : $a->reason }}
+                                    <div class="text-xs text-gray-500 mt-2 flex items-center bg-gray-100 rounded px-3 py-1.5 inline-block">
+                                        <i class="fas fa-sticky-note mr-2"></i>
+                                        {{ strlen($a->reason) > 100 ? substr($a->reason, 0, 100) . '...' : $a->reason }}
                                     </div>
                                 @endif
                             </div>
                             <div class="ml-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-semibold 
-                                    @if($a->status === 'confirmed') bg-green-100 text-green-800
-                                    @elseif($a->status === 'completed') bg-blue-100 text-blue-800
-                                    @elseif($a->status === 'canceled') bg-red-100 text-red-800
-                                    @else bg-gray-100 text-gray-800
-                                    @endif">
+                                <span class="px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r 
+                                    @if($a->status === 'confirmed') from-blue-500 to-indigo-500
+                                    @elseif($a->status === 'completed') from-green-500 to-emerald-500
+                                    @elseif($a->status === 'canceled') from-red-500 to-rose-500
+                                    @else from-gray-500 to-gray-600
+                                    @endif text-white shadow-md">
                                     {{ ucfirst($a->status ?? 'pending') }}
                                 </span>
                             </div>
                         </div>
                     </div>
                 @empty
-                    <div class="text-center py-8">
-                        <i class="fas fa-calendar-times text-4xl text-gray-300 mb-3"></i>
-                        <div class="text-gray-500">No upcoming appointments.</div>
-                        <a href="{{ route('appointments.create') }}" class="inline-block mt-3 text-brand-maroon hover:underline font-semibold">
-                            Book your first appointment <i class="fas fa-arrow-right ml-1"></i>
+                    <div class="text-center py-12 bg-gradient-to-br from-gray-50 to-white rounded-xl border-2 border-dashed border-gray-300">
+                        <div class="mb-4">
+                            <i class="fas fa-calendar-times text-6xl text-gray-300"></i>
+                        </div>
+                        <div class="text-gray-600 font-medium mb-4">No upcoming appointments.</div>
+                        <a href="{{ route('appointments.create') }}" class="inline-flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            Book your first appointment
                         </a>
                     </div>
                 @endforelse

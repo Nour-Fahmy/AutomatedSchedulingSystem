@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Appointment;
+use App\Models\AppointmentRequest;
 use App\Services\AppointmentService;
+use App\Services\AppointmentMatchingService;
 
 class AppointmentController extends Controller
 {
@@ -17,15 +19,27 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Show the logged-in student's appointments (acts as "View Schedule").
+     * Show the logged-in user's appointments (acts as "View Schedule").
      */
     public function index()
     {
         $user = Auth::user();
-        $appointments = $this->appointmentService->getStudentAppointments($user->id);
+        
+        // Get appointments based on user type
+        if ($user->isStudent()) {
+            $appointments = $this->appointmentService->getStudentAppointments($user->id);
+        } elseif ($user->isFaculty()) {
+            $appointments = Appointment::with(['student', 'service'])
+                ->where('faculty_id', $user->id)
+                ->orderBy('start_at', 'asc')
+                ->get();
+        } else {
+            $appointments = collect();
+        }
 
         return view('appointments.index', [
             'appointments' => $appointments,
+            'user' => $user,
         ]);
     }
 
@@ -40,32 +54,52 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Store a newly booked appointment.
+     * Store a student availability request.
      */
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        $data = $request->validate([
+        $validated = $request->validate([
             'service_id' => 'required|exists:services,id',
-            'faculty_id' => 'required|exists:users,id',
-            'date' => 'required|date|after_or_equal:today',
+            'available_days' => 'required|array|min:1',
+            'available_days.*' => 'integer|min:0|max:6',
             'start_time' => 'required|date_format:H:i',
-            'duration' => 'required|integer|min:15|max:240',
-            'reason' => 'nullable|string|max:1000',
+            'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
-        try {
-            $data['student_id'] = $user->id;
-            $this->appointmentService->createAppointment($data);
+        // Check if student already has a pending request for this service
+        $existingRequest = AppointmentRequest::where('student_id', $user->id)
+            ->where('service_id', $validated['service_id'])
+            ->where('status', 'pending')
+            ->first();
 
-            return redirect()->route('appointments.index')
-                ->with('status', 'Appointment booked successfully!');
-        } catch (\Exception $e) {
+        if ($existingRequest) {
             return back()
                 ->withInput()
-                ->withErrors(['start_time' => $e->getMessage()]);
+                ->withErrors(['service_id' => 'You already have a pending request for this service. Please wait for it to be matched.']);
         }
+
+        $appointmentRequest = AppointmentRequest::create([
+            'student_id' => $user->id,
+            'service_id' => $validated['service_id'],
+            'available_days' => $validated['available_days'],
+            'start_time' => $validated['start_time'],
+            'end_time' => $validated['end_time'],
+            'status' => 'pending',
+        ]);
+
+        // Trigger matching process
+        $matchingService = app(AppointmentMatchingService::class);
+        $matchedAppointment = $matchingService->tryMatchRequest($appointmentRequest);
+
+        if ($matchedAppointment) {
+            return redirect()->route('appointments.index')
+                ->with('status', 'Your availability has been submitted and a matching appointment has been scheduled!');
+        }
+
+        return redirect()->route('appointments.index')
+            ->with('status', 'Your availability has been submitted. The system will automatically find a matching slot with a faculty member when one becomes available.');
     }
 
     /**

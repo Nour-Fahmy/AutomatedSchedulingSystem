@@ -18,18 +18,20 @@ return new class extends Migration {
                 ->constrained('services')
                 ->cascadeOnDelete();
 
-            $table->date('preferred_date');
+            // Available days: JSON array of weekday numbers (0=Sunday, 1=Monday, ..., 6=Saturday)
+            $table->json('available_days');
 
-            $table->enum('time_bracket', ['morning', 'afternoon', 'evening', 'any'])
-                ->default('any');
+            // Time range when student is available
+            $table->time('start_time');
+            $table->time('end_time');
 
             $table->enum('status', ['pending', 'matched', 'expired'])
                 ->default('pending');
 
             $table->timestamps();
 
-            $table->index(['student_id', 'preferred_date']);
-            $table->index(['service_id', 'preferred_date']);
+            $table->index(['student_id', 'status']);
+            $table->index(['service_id', 'status']);
             $table->index(['status']);
         });
     }

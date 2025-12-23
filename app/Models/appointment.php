@@ -13,6 +13,7 @@ class Appointment extends Model
         'student_id',
         'faculty_id',
         'service_id',
+        'request_id',
         'start_at',
         'end_at',
         'status',
@@ -46,6 +47,14 @@ class Appointment extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * Get the appointment request that led to this appointment (if any).
+     */
+    public function request()
+    {
+        return $this->belongsTo(AppointmentRequest::class, 'request_id');
     }
 
     // ---------------------------------------------

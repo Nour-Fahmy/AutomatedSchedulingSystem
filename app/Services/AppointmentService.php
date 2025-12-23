@@ -26,6 +26,7 @@ class AppointmentService
     public function getAvailableServices()
     {
         return Service::where('is_active', true)
+            ->whereIn('name', ['Academic Advising', 'Career Counseling', 'Tutoring'])
             ->orderBy('name')
             ->get();
     }
@@ -100,8 +101,10 @@ class AppointmentService
      */
     public function cancelAppointment(Appointment $appointment, int $userId): void
     {
-        // Verify ownership
-        if ($appointment->student_id !== $userId) {
+        $user = User::find($userId);
+        
+        // Verify ownership - either student or faculty can cancel
+        if ($appointment->student_id !== $userId && $appointment->faculty_id !== $userId) {
             throw new \Exception('You do not have permission to cancel this appointment.');
         }
 
@@ -137,7 +140,6 @@ class AppointmentService
     {
         return [
             'services' => $this->getAvailableServices(),
-            'faculty' => $this->getFacultyMembers(),
         ];
     }
 }
