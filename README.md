@@ -1,61 +1,53 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AlignUp
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**AlignUp** is a Laravel web application for academic scheduling. It brings student appointments, faculty office hours, role-based dashboards, and a discussion forum into one interface. The landing page describes use cases such as advising and tutoring.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Appointments:** Students can view, create, and cancel appointments.
+- **Faculty availability:** Faculty users can add and remove office-hour rules from the dashboard.
+- **Role-aware dashboard:** Student, faculty, and admin views are selected by user role.
+- **Administration:** Routes support user creation, role changes, deletion, settings updates, and service toggles.
+- **Forum:** Users can create discussions and post replies.
+- **Accounts:** Registration, login, logout, and password reset routes.
+- **Google Calendar:** OAuth connection, callback, and disconnection routes are present; using the integration requires local configuration.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Built with
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+ and Laravel 12
+- Blade views, Tailwind CSS, and Vite
+- SQLite as the default local database
+- Google API Client
 
-## Learning Laravel
+## Run locally
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Requirements: PHP 8.2+, Composer, Node.js/npm, and SQLite.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+git clone https://github.com/Nour-Fahmy/AutomatedSchedulingSystem.git
+cd AutomatedSchedulingSystem
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate
+npm install
+npm run build
+php artisan serve
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Open the URL printed by `php artisan serve`. To work on the front end, run `npm run dev` in another terminal. The repository also defines `composer setup`, `composer dev`, and `composer test` scripts.
 
-## Laravel Sponsors
+The example environment file uses SQLite. Configure external services such as Google Calendar locally before using them. Keep real credentials in `.env`, which should stay outside version control.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Project structure
 
-### Premium Partners
+- `app/` — controllers, models, and application logic
+- `routes/web.php` and `routes/auth.php` — application and authentication routes
+- `resources/views/` — Blade pages
+- `database/` — migrations and local data setup
+- `tests/` — automated tests
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Scope
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This repository contains the application source and development history. A public deployment or production calendar configuration is not documented here.
